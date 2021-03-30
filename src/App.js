@@ -1,11 +1,11 @@
-import { useState, useEffect } from 'react';
+import { useState } from 'react';
 
 import 'antd/dist/antd.css';
 import Input from 'antd/lib/input';
 
 import Papa from 'papaparse';
 
-import './App.css';
+import SizeChart from './components/SizeChart.jsx';
 
 
 function App() {
@@ -14,13 +14,9 @@ function App() {
 
   const [data, setDate] = useState();
 
-  useEffect(() => {
-    console.log(data);
-  }, [data]);
-
   const parseSizeBin = param => {
-    const [_, x] = param.split(".d");
-    return +x / 1e12
+    const x = param.split(".d");
+    return +x[1] / 1e12;
   };
 
   const tidyParsedData = data => {
@@ -33,13 +29,13 @@ function App() {
 
     const size = header.map(parseSizeBin).sort((a, b) => a - b);
     
-    const dndlogdp = [];
-    for (let i=0; i < body.length; i++) {
+    // 2d array: rows - size ascending, columns - datetime ascending
+    const dndlogdp = [...Array(size.length)].map(() => Array(datetime.length));
+    for (let i = 0; i < body.length; i++) {
       const rowData = body[i].slice(6, body.length);
-      dndlogdp[i] = [];
-      for (let j=0; j < rowData.length; j++) {
+      for (let j = 0; j < rowData.length; j++) {
         let index = size.indexOf(parseSizeBin(header[j]));
-        dndlogdp[i][index] = +rowData[j];
+        dndlogdp[index][i] = +rowData[j];
       };
     };
 
@@ -63,11 +59,14 @@ function App() {
   };
 
   return (
-    <Input
-      type="file"
-      accept=".csv,.txt,.xls,.xlsx"
-      onChange={handleFileUpload}
-    />
+    <>
+      <Input
+        type="file"
+        accept=".csv,.txt,.xls,.xlsx"
+        onChange={handleFileUpload}
+      />
+      { data ? <SizeChart data={data}/> : null }
+    </>
   );
 };
 
