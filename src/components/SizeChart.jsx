@@ -132,12 +132,12 @@ const SizeChart = ({ data }) => {
     const ROI2 = bottomROI2.concat(topROI);
 
     // Gaussian Function
-    function gaussFunc(x, xMaxi, yMaxi, s) {
+    const gaussFunc = (x, xMaxi, yMaxi, s) => {
       return yMaxi * math.exp(-((x - xMaxi) * (x - xMaxi) / s));
     };
 
     // Gaussian Fitting
-    function gaussFit(xOriginal, yOriginal) {
+    const gaussFit = (xOriginal, yOriginal) => {
       const average = math.mean(yOriginal);
 
       const x = [];
@@ -179,6 +179,43 @@ const SizeChart = ({ data }) => {
       };
 
       return yFit;
+    };
+
+    // get intervals of each size bin in ROI
+    const divideToIntervals = arr => {
+      const intervals = [];
+      let startIndex = null;
+      let endIndex = null;
+      for (let i=0; i < arr.length; i++) {
+        if (i === 0) {
+          if (arr[i] > 0) {
+            startIndex = i;
+            if (arr[i+1] <= 0) {
+              endIndex = i + 1;
+            };
+          };
+        } else if (i !== arr.length -1) {
+          if ((arr[i-1] <= 0) && (arr[i] > 0)) {
+            startIndex = i;
+          }
+          if ((arr[i] > 0) && (arr[i+1] <= 0)) {
+            endIndex = i + 1;
+          };
+        } else {
+          if (arr[i] > 0) {
+            // console.log(i)
+            if (arr[i-1] <= 0) {
+              startIndex = i;
+            };
+            endIndex = i + 1;
+          };
+        };
+        if (endIndex) {
+          intervals.push([startIndex, endIndex]);
+          endIndex = null;
+        };
+      };
+      return intervals;
     };
 
     // start plotting
