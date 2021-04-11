@@ -168,7 +168,13 @@ const SizeChart = ({ data }) => {
       return intervals;
     };
 
-    console.log(divideToIntervals(ROI2[10]))
+    // get intervals of all size bin rows
+    const intervalsArr = [];
+    for (let i=0; i < ROI2.length; i++) {
+      intervalsArr.push(divideToIntervals(ROI2[i]));
+    };
+
+    console.log(intervalsArr)
 
     // Gaussian Function
     const gaussFunc = (x, xMaxi, yMaxi, s) => {
