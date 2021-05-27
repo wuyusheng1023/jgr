@@ -7,12 +7,13 @@ import Papa from 'papaparse';
 import tidySmearCsv from '../helpers/tidySmearCsv.js';
 
 
-export default function SmearCsvFileReader({ passData }) {
+export default function SmearCsvReader({ passData }) {
 
   const [data, setDate] = useState();
 
   useEffect(() => {
     if (data) {
+      console.log(data);
       passData(data);
     };
   }, [data]);

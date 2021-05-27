@@ -6,7 +6,8 @@ import Col from 'antd/lib/col';
 import Select from 'antd/lib/select';
 import Divider from 'antd/lib/divider';
 
-import SmearCsvFileReader from './components/SmearCsvFileReader.jsx';
+import SmearCsvReader from './components/SmearCsvReader.jsx';
+import SmearOnlineReader from './components/SmearOnlineReader.jsx';
 import SizeChart from './components/SizeChart.jsx';
 
 
@@ -15,15 +16,16 @@ const { Option } = Select;
 
 function App() {
 
-  const [data, setDate] = useState();
+  const [data, setData] = useState();
   const [inputType, setInputType] = useState();
 
   const onChange = value => {
+    setData(null);
     setInputType(value);
   };
 
   const passData = data => {
-    setDate(data);
+    setData(data);
   };
 
   return (
@@ -41,13 +43,14 @@ function App() {
             placeholder="Select a data type"
             onChange={onChange}
           >
-            <Option value='smear_csv'>Upload CSV (SMEAR style)</Option>
-            <Option value='smear_ii_online'>SMEAR II API</Option>
+            <Option value='smear_csv'>Upload CSV</Option>
+            <Option value='smear_online'>Select SMEAR Online Data</Option>
           </Select>
         </Col>
 
         <Col span={14}>
-          { inputType === 'smear_csv' ? <SmearCsvFileReader passData={passData} /> : null }
+          { inputType === 'smear_csv' ? <SmearCsvReader passData={passData} /> : null }
+          { inputType === 'smear_online' ? <SmearOnlineReader passData={d => console.log(d)}/> : null }
         </Col>
       </Row>
 
