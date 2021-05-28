@@ -7,6 +7,7 @@ import Select from 'antd/lib/select'
 import DatePicker from 'antd/lib/date-picker'
 
 import constructQueryUrl from '../helpers/constructQueryUrl.js';
+import tidySmearOnline from '../helpers/tidySmearOnline';
 
 
 export default function SmearCsvReader({ passData }) {
@@ -36,11 +37,12 @@ export default function SmearCsvReader({ passData }) {
       null;
 
   const processData = rawData => {
-    const data = rawData;
-    console.log(data);
+    const data = tidySmearOnline(rawData);
+    setDate(data);
   };
 
   const onFinish = data => {
+    passData(null);
     if (data.date === undefined) {
       alert("Please selete a date!")
       return

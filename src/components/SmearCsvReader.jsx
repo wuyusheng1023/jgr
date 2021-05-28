@@ -13,12 +13,12 @@ export default function SmearCsvReader({ passData }) {
 
   useEffect(() => {
     if (data) {
-      console.log(data);
       passData(data);
     };
   }, [data]);
 
   const handleFileUpload = e => {
+    passData(null);
     const file = e.target.files[0];
     const reader = new FileReader();
     reader.onload = e => {

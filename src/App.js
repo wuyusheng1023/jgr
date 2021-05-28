@@ -25,6 +25,7 @@ function App() {
   };
 
   const passData = data => {
+    console.log(data);
     setData(data);
   };
 
@@ -43,20 +44,20 @@ function App() {
             placeholder="Select a data type"
             onChange={onChange}
           >
-            <Option value='smear_csv'>Upload CSV</Option>
             <Option value='smear_online'>Select SMEAR Online Data</Option>
+            <Option value='smear_csv'>Upload CSV</Option>
           </Select>
         </Col>
 
         <Col span={14}>
+          { inputType === 'smear_online' ? <SmearOnlineReader passData={passData}/> : null }
           { inputType === 'smear_csv' ? <SmearCsvReader passData={passData} /> : null }
-          { inputType === 'smear_online' ? <SmearOnlineReader passData={d => console.log(d)}/> : null }
         </Col>
       </Row>
 
       <Row>
         <Col span={20} offset={2}>
-          { data ? <SizeChart data={data}/> : null }        
+          { data ? <SizeChart data={data}/> : null }
         </Col>
       </Row>
 
