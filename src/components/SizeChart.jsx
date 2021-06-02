@@ -180,8 +180,22 @@ const SizeChart = ({ data }) => {
       const areaRatio = area / ROI2.length / ROI2[0].length;
       if (areaRatio < validAreaSizeRatio) {
         ROI2 = [];
-      } else {
-        
+      } 
+
+      // Get rows of ROI
+      if (ROI2 && ROI2.length > 0) {
+        const ROISizeRowArr = [];
+        for (let i = 0; i < rawArr.length; i++) {
+          const ROISizeRow = rawArr[i].filter((_, j) => ROI2[i][j] === 1);
+          const timeRow = x.filter((_, j) => ROI2[i][j] === 1);
+          if (ROISizeRow.length > 0) {
+            ROISizeRowArr.push({
+              size: y[i],
+              time: timeRow,
+              bins: ROISizeRow,
+            });
+          };
+        };
       };
     };
 
