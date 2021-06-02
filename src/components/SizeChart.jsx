@@ -131,7 +131,7 @@ const SizeChart = ({ data }) => {
     const smROI = ROI.map( (arr, i) => arr.map( (v, j) => smArr1[i][j] * ( v>0 ? 1 : 0 ) ) );
     const q1 = quantile([].concat(...smROI).filter(v => v>0), .25);
     const bottomROI2 = bottomRegion.map(dpArr => dpArr.map( v => v-q1 ));
-    const ROI2 = bottomROI2.concat(topROI);
+    let ROI2 = bottomROI2.concat(topROI);
 
     // Get a ROI starting index
     const getROIIndex = arr => {
@@ -146,7 +146,7 @@ const SizeChart = ({ data }) => {
     };
 
     // Get ROI2 blocks
-    let fillArr = ROI2.map(v => v.map(d => d > q1 ? 0 : -1));
+    let fillArr = ROI2.map(v => v.map(d => d > 0 ? 0 : -1));
     let sr = null;
     let sc = null;
     let nBlock = 0;
@@ -156,7 +156,22 @@ const SizeChart = ({ data }) => {
       fillArr = floodFill(fillArr, sr, sc, nBlock);
       [sr, sc] = getROIIndex(fillArr);
     };
-    console.log(nBlock);
+    
+    // Get largest block
+    if (nBlock > 0) {
+      let fillArr1d = [];
+      for (let i = 0; i < fillArr.length; i++) {
+        fillArr1d = fillArr1d.concat(fillArr[i]);
+      };
+      const blockAreas = [];
+      for (let i = 0; i < nBlock; i++) {
+        blockAreas.push(fillArr1d.filter(x => x === i + 1).length);
+      };
+      const maxAreaNum = blockAreas.indexOf(Math.max(...blockAreas)) + 1;
+      ROI2 = fillArr.map(x => x.map((v, i) => v === maxAreaNum ? 1 : 0))
+    };
+
+    console.log("ROI2", ROI2);
 
     // Gaussian Function
     const gaussFunc = (x, xMaxi, yMaxi, s) => {
@@ -236,10 +251,10 @@ const SizeChart = ({ data }) => {
       .attr("transform", `translate( ${conMargin.left}, 0 )`)
       .call(d3.axisLeft(scY));
 
-    // plot ROI contour line
+    // plot ROI2 contour line
     z = Array.from(ROI2).reverse();
     z = [].concat(...z);
-    conMkr = d3.contours().size([pxX, pxY]).thresholds(10);
+    conMkr = d3.contours().size([pxX, pxY]).thresholds(1);
     g.append("g").append("path")
       .attr("d", pathMkr(conMkr.contour(z, 0.025)))
       .attr("fill", "none").attr("stroke", "grey")
