@@ -7,7 +7,7 @@ import Papa from 'papaparse';
 import tidySmearCsv from '../helpers/tidySmearCsv.js';
 
 
-export default function SmearCsvReader({ passData }) {
+export default function SmearCsvReader({ passData=f=>f }) {
 
   const [data, setDate] = useState();
 
@@ -15,7 +15,7 @@ export default function SmearCsvReader({ passData }) {
     if (data) {
       passData(data);
     };
-  }, [data]);
+  }, [passData, data]);
 
   const handleFileUpload = e => {
     passData(null);

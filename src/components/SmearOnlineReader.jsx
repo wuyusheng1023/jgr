@@ -9,7 +9,7 @@ import constructQueryUrl from '../helpers/constructQueryUrl.js';
 import tidySmearOnline from '../helpers/tidySmearOnline';
 
 
-export default function SmearCsvReader({ passData }) {
+export default function SmearCsvReader({ passData=f=>f }) {
   
   const [componentSize, setComponentSize] = useState('default');
   const [formLayout] = useState('horizontal')
@@ -19,7 +19,7 @@ export default function SmearCsvReader({ passData }) {
     if (data) {
       passData(data);
     };
-  }, [data]);
+  }, [passData, data]);
 
   const onFormLayoutChange = ({ size }) => {
     setComponentSize(size);
@@ -58,18 +58,12 @@ export default function SmearCsvReader({ passData }) {
   return (
     <>
       <Form
-        labelCol={{
-          span: 4,
-        }}
-        wrapperCol={{
-          span: 14,
-        }}
+        labelCol={{ span: 4 }}
+        wrapperCol={{ span: 14 }}
         layout="horizontal"
-        initialValues={{
-          size: componentSize,
-        }}
 
         initialValues={{
+          size: componentSize,
           station: "HYY",
           quality: "ANY",
           interval: "1 min",
@@ -78,7 +72,6 @@ export default function SmearCsvReader({ passData }) {
 
         onValuesChange={onFormLayoutChange}
         size={componentSize}
-
         onFinish={onFinish}
       >
         <Form.Item label="Station" name="station">

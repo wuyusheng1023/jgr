@@ -1,4 +1,4 @@
-import { useState, useRef, useEffect } from 'react';
+import { useRef, useEffect } from 'react';
 
 import * as d3 from 'd3';
 import * as colormap from 'colormap';
@@ -12,8 +12,6 @@ import growthRateFit from '../helpers/growthRateFit.js';
 
 
 const SizeChart = ({ data, passResult }) => {
-
-  const [status, setStatus] = useState();
 
   useEffect(() => {
     const dpLowerLimit = 3e-9;
@@ -239,7 +237,7 @@ const SizeChart = ({ data, passResult }) => {
       .attr("fill", "none").attr("stroke", "grey").attr("opacity", 0.75)
       .attr("stroke-width", 1);
     
-    let GR;
+    let GR = null;
     if (fitTimeSize && fitTimeSize.length > 0) {
       // plot max concentration
       const scTime = d => (scX(d["x"]) - conMargin.left) / conWidth * pxX;
@@ -263,31 +261,21 @@ const SizeChart = ({ data, passResult }) => {
           .attr("d", lineMaker(GRLine))
         GR = (GRLine[GRLine.length - 1]["y"] - GRLine[0]["y"]) * 1e9 / ((GRLine[GRLine.length - 1]["x"] - GRLine[0]["x"]) / 1e3 / 60 / 60);
       };
-    } else {
-      GR = null;
     };
 
     passResult({
       GR: GR,
     });
 
-    setStatus("plotted");
-
   });  
 
   const ref = useRef();
 
   return (
-    <>
-      {
-        status === "plotted" ?
-          <svg
-            // style={{backgroundColor: "LightGrey"}}
-            ref={ref}
-          /> :
-          null
-      }
-    </>
+    <svg
+      // style={{backgroundColor: "LightGrey"}}
+      ref={ref}
+    />
   );
 };
 

@@ -14,7 +14,7 @@ function findLineByLeastSquares(values_x, values_y) {
   var y = 0;
   var values_length = values_x.length;
 
-  if (values_length != values_y.length) {
+  if (values_length !== values_y.length) {
     throw new Error('The parameters values_x and values_y need to have same size!');
   }
 
