@@ -250,17 +250,21 @@ const SizeChart = ({ data }) => {
 
       // plot growth rate fitting
       const GRLine = growthRateFit(fitTimeSize);
-      const lineMaker = d3.line()
-        .x(scTime)
-        .y(scSize);
-      g.append("g")
-        .append("path")
-        .attr("fill", "none").attr("stroke", "white").attr("opacity", 0.75)
-        .attr("d", lineMaker(GRLine))
-      const GR = (GRLine[GRLine.length - 1]["y"] - GRLine[0]["y"]) * 1e9 / ((GRLine[GRLine.length - 1]["x"] - GRLine[0]["x"]) / 1e3 / 60 / 60);
-      console.log(GR);
+      let GR;
+      if (GRLine !== null) {
+        const lineMaker = d3.line()
+          .x(scTime)
+          .y(scSize);
+        g.append("g")
+          .append("path")
+          .attr("fill", "none").attr("stroke", "white").attr("opacity", 0.75)
+          .attr("d", lineMaker(GRLine))
+        GR = (GRLine[GRLine.length - 1]["y"] - GRLine[0]["y"]) * 1e9 / ((GRLine[GRLine.length - 1]["x"] - GRLine[0]["x"]) / 1e3 / 60 / 60);
+      } else {
+        GR = null;
+      };
+      console.log('GR', GR);
     };
-
 
   });  
 
