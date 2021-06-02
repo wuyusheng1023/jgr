@@ -8,6 +8,7 @@ import lodashClonedeep from 'lodash/cloneDeep';
 import range from '../helpers/range.js';
 import floodFill from '../helpers/floodFill.js';
 import gaussFit from '../helpers/gaussFit.js';
+import growthRateFit from '../helpers/growthRateFit.js';
 
 
 const SizeChart = ({ data }) => {
@@ -236,16 +237,31 @@ const SizeChart = ({ data }) => {
       .attr("fill", "none").attr("stroke", "grey").attr("opacity", 0.75)
       .attr("stroke-width", 1);
     
-    // plot max concentration
-    const scTime = d => (scX(d["x"]) - conMargin.left) / conWidth * pxX;
-    const scSize = d => (scY(d["y"]) - conMargin.top) / conHeight * pxY;
-    g.append("g").selectAll("circle")
-      .data(fitTimeSize).enter().append("circle")
-      .attr("r", 1).attr("fill", "black").attr("opacity", 0.6)
-      .attr("cx", scTime)
-      .attr("cy", scSize);
+    if (fitTimeSize) {
+      // plot max concentration
+      const scTime = d => (scX(d["x"]) - conMargin.left) / conWidth * pxX;
+      const scSize = d => (scY(d["y"]) - conMargin.top) / conHeight * pxY;
+      g.append("g").selectAll("circle")
+        .data(fitTimeSize).enter().append("circle")
+        .attr("r", 1).attr("fill", "black").attr("opacity", 0.6)
+        .attr("cx", scTime)
+        .attr("cy", scSize);
 
-  });
+      // plot growth rate fitting
+      const GRLine = growthRateFit(fitTimeSize);
+      const lineMaker = d3.line()
+        .x(scTime)
+        .y(scSize);
+      g.append("g")
+        .append("path")
+        .attr("fill", "none").attr("stroke", "white").attr("opacity", 0.55)
+        .attr("d", lineMaker(GRLine))
+      const GR = (GRLine[GRLine.length - 1]["y"] - GRLine[0]["y"]) * 1e9 / ((GRLine[GRLine.length - 1]["x"] - GRLine[0]["x"]) / 1e3 / 60 / 60);
+      console.log(GR);
+    };
+
+
+  });  
 
   const ref = useRef();
 
