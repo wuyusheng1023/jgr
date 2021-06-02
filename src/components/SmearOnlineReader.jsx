@@ -11,7 +11,7 @@ import tidySmearOnline from '../helpers/tidySmearOnline';
 
 export default function SmearCsvReader({ passData }) {
   
-  const[componentSize, setComponentSize] = useState('default');
+  const [componentSize, setComponentSize] = useState('default');
   const [formLayout] = useState('horizontal')
   const [data, setDate] = useState();
 
@@ -46,6 +46,7 @@ export default function SmearCsvReader({ passData }) {
       alert("Please selete a date!")
       return
     };
+    passData("fetching");
 
     const url = constructQueryUrl(data);
     fetch(url)

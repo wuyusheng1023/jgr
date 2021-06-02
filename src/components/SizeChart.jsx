@@ -1,4 +1,4 @@
-import { useRef, useEffect } from 'react';
+import { useState, useRef, useEffect } from 'react';
 
 import * as d3 from 'd3';
 import * as colormap from 'colormap';
@@ -11,7 +11,9 @@ import gaussFit from '../helpers/gaussFit.js';
 import growthRateFit from '../helpers/growthRateFit.js';
 
 
-const SizeChart = ({ data }) => {
+const SizeChart = ({ data, passResult }) => {
+
+  const [status, setStatus] = useState();
 
   useEffect(() => {
     const dpLowerLimit = 3e-9;
@@ -237,7 +239,7 @@ const SizeChart = ({ data }) => {
       .attr("fill", "none").attr("stroke", "grey").attr("opacity", 0.75)
       .attr("stroke-width", 1);
     
-    console.log(fitTimeSize)
+    let GR;
     if (fitTimeSize && fitTimeSize.length > 0) {
       // plot max concentration
       const scTime = d => (scX(d["x"]) - conMargin.left) / conWidth * pxX;
@@ -250,7 +252,7 @@ const SizeChart = ({ data }) => {
 
       // plot growth rate fitting
       const GRLine = growthRateFit(fitTimeSize);
-      let GR;
+      
       if (GRLine !== null) {
         const lineMaker = d3.line()
           .x(scTime)
@@ -260,21 +262,34 @@ const SizeChart = ({ data }) => {
           .attr("fill", "none").attr("stroke", "white").attr("opacity", 0.75)
           .attr("d", lineMaker(GRLine))
         GR = (GRLine[GRLine.length - 1]["y"] - GRLine[0]["y"]) * 1e9 / ((GRLine[GRLine.length - 1]["x"] - GRLine[0]["x"]) / 1e3 / 60 / 60);
-      } else {
-        GR = null;
       };
-      console.log('GR', GR);
+    } else {
+      GR = null;
     };
+
+    console.log('GR', GR);
+
+    passResult({
+      GR: GR,
+    });
+
+    setStatus("plotted");
 
   });  
 
   const ref = useRef();
 
   return (
-    <svg
-      style={{backgroundColor: "LightGrey"}}
-      ref={ref}
-    />
+    <>
+      {
+        status === "plotted" ?
+          <svg
+            // style={{backgroundColor: "LightGrey"}}
+            ref={ref}
+          /> :
+          null
+      }
+    </>
   );
 };
 

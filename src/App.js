@@ -18,6 +18,7 @@ function App() {
 
   const [data, setData] = useState();
   const [inputType, setInputType] = useState();
+  const [status, setStatus] = useState();
 
   const onChange = value => {
     setData(null);
@@ -25,8 +26,17 @@ function App() {
   };
 
   const passData = data => {
-    console.log(data);
-    setData(data);
+    if (typeof data === 'string') {
+      setStatus(data);
+    } else {
+      console.log(data);
+      setStatus("plot");
+      setData(data);
+    };
+  };
+
+  const passResult = result => {
+    console.log("result", result);
   };
 
   return (
@@ -57,7 +67,16 @@ function App() {
 
       <Row>
         <Col span={20} offset={2}>
-          { data ? <SizeChart data={data}/> : null }
+          { 
+            status === "fetching" ? 
+              <h2>Fetching Data, please wait...</h2> : 
+              null
+          }
+          {
+            data ? 
+              <SizeChart data={data} passResult={passResult}/> : 
+              null 
+          }
         </Col>
       </Row>
 
