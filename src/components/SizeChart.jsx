@@ -267,8 +267,6 @@ const SizeChart = ({ data, passResult }) => {
       GR = null;
     };
 
-    console.log('GR', GR);
-
     passResult({
       GR: GR,
     });

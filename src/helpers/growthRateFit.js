@@ -69,11 +69,9 @@ export default function growthRateFit(data) {
   const y = data.map(d => d["y"]);
 
   const [xFit, yFit] = findLineByLeastSquares(x, y);
-  console.log(xFit, yFit)
   const index = [...xFit].sort().map(x => xFit.indexOf(x));
   const datetimeFit = index.map(x => new Date(xFit[x]));
   const sizeFit = index.map(x => yFit[x]);
-  console.log(index, datetimeFit, sizeFit)
 
   if (sizeFit[0] < sizeFit[sizeFit.length -1]) {
     return datetimeFit.map((v, i) => ({x: v, y: sizeFit[i]}));

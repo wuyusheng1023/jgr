@@ -29,7 +29,6 @@ function App() {
     if (typeof data === 'string') {
       setStatus(data);
     } else {
-      console.log(data);
       setStatus("plot");
       setData(data);
     };
