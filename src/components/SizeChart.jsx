@@ -6,6 +6,8 @@ import * as colormap from 'colormap';
 import * as math from 'mathjs';
 import lodashClonedeep from 'lodash/cloneDeep';
 
+import floodFill from '../helpers/floodFill.js';
+
 
 const SizeChart = ({ data }) => {
 
@@ -130,6 +132,31 @@ const SizeChart = ({ data }) => {
     const q1 = quantile([].concat(...smROI).filter(v => v>0), .25);
     const bottomROI2 = bottomRegion.map(dpArr => dpArr.map( v => v-q1 ));
     const ROI2 = bottomROI2.concat(topROI);
+
+    // Get a ROI starting index
+    const getROIIndex = arr => {
+      for (let i = 0; i < arr.length; i++) {
+        for (let j = 0; j < arr[0].length; j++) {
+          if (arr[i][j] === 0) {
+            return [i, j];
+          };
+        };
+      };
+      return [null, null];
+    };
+
+    // Get ROI2 blocks
+    let fillArr = ROI2.map(v => v.map(d => d > q1 ? 0 : -1));
+    let sr = null;
+    let sc = null;
+    let nBlock = 0;
+    [sr, sc] = getROIIndex(fillArr);
+    while (sr) {
+      nBlock += 1;
+      fillArr = floodFill(fillArr, sr, sc, nBlock);
+      [sr, sc] = getROIIndex(fillArr);
+    };
+    console.log(nBlock);
 
     // Gaussian Function
     const gaussFunc = (x, xMaxi, yMaxi, s) => {
