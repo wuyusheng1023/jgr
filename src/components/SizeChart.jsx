@@ -135,6 +135,7 @@ const SizeChart = ({ data }) => {
     };
 
     // Get ROI2 blocks
+    let fitTimeSize;
     let fillArr = ROI2.map(v => v.map(d => d > 0 ? 0 : -1));
     let sr = null;
     let sc = null;
@@ -196,10 +197,7 @@ const SizeChart = ({ data }) => {
             ROISizeRowArr[i]['time'] = x[index];
           };
         };
-        const fitTimeArr = ROISizeRowArr.map(d => d['time']);
-        const fitSizeArr = ROISizeRowArr.map(d => d['size']);
-        console.log(fitTimeArr);
-        console.log(fitSizeArr);
+        fitTimeSize = ROISizeRowArr.map(d => ({x: d['time'], y: d['size']}));
       };
     };
 
@@ -235,8 +233,18 @@ const SizeChart = ({ data }) => {
     conMkr = d3.contours().size([pxX, pxY]).thresholds(1);
     g.append("g").append("path")
       .attr("d", pathMkr(conMkr.contour(z, 0.025)))
-      .attr("fill", "none").attr("stroke", "grey")
+      .attr("fill", "none").attr("stroke", "grey").attr("opacity", 0.75)
       .attr("stroke-width", 1);
+    
+    // plot max concentration
+    const scTime = d => (scX(d["x"]) - conMargin.left) / conWidth * pxX;
+    const scSize = d => (scY(d["y"]) - conMargin.top) / conHeight * pxY;
+    g.append("g").selectAll("circle")
+      .data(fitTimeSize).enter().append("circle")
+      .attr("r", 1).attr("fill", "black").attr("opacity", 0.6)
+      .attr("cx", scTime)
+      .attr("cy", scSize);
+
   });
 
   const ref = useRef();
