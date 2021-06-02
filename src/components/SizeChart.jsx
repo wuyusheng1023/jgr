@@ -15,7 +15,7 @@ const SizeChart = ({ data }) => {
 
   useEffect(() => {
     const dpLowerLimit = 3e-9;
-    const validAreaSizeRatio = 0.0025;
+    const validAreaRatio = [0.005, 0.2];
 
     // plot dimemsions
     const width = 640;
@@ -168,7 +168,7 @@ const SizeChart = ({ data }) => {
       };
       const area = ROI2Flat.reduce((a, b) => a + b, 0);
       const areaRatio = area / ROI2.length / ROI2[0].length;
-      if (areaRatio < validAreaSizeRatio) {
+      if (areaRatio < validAreaRatio[0] || areaRatio > validAreaRatio[1]) {
         ROI2 = [];
       } 
 
@@ -178,7 +178,7 @@ const SizeChart = ({ data }) => {
         for (let i = 0; i < rawArr.length; i++) {
           const ROISizeRow = rawArr[i].filter((_, j) => ROI2[i][j] === 1);
           const timeRow = range(0, rawArr[i].length).filter((_, j) => ROI2[i][j] === 1);
-          if (ROISizeRow.length > 0) {
+          if (ROISizeRow.length >= 3) {
             ROISizeRowArr.push({
               size: y[i],
               time: timeRow,
@@ -237,7 +237,8 @@ const SizeChart = ({ data }) => {
       .attr("fill", "none").attr("stroke", "grey").attr("opacity", 0.75)
       .attr("stroke-width", 1);
     
-    if (fitTimeSize) {
+    console.log(fitTimeSize)
+    if (fitTimeSize && fitTimeSize.length > 0) {
       // plot max concentration
       const scTime = d => (scX(d["x"]) - conMargin.left) / conWidth * pxX;
       const scSize = d => (scY(d["y"]) - conMargin.top) / conHeight * pxY;
@@ -254,7 +255,7 @@ const SizeChart = ({ data }) => {
         .y(scSize);
       g.append("g")
         .append("path")
-        .attr("fill", "none").attr("stroke", "white").attr("opacity", 0.55)
+        .attr("fill", "none").attr("stroke", "white").attr("opacity", 0.75)
         .attr("d", lineMaker(GRLine))
       const GR = (GRLine[GRLine.length - 1]["y"] - GRLine[0]["y"]) * 1e9 / ((GRLine[GRLine.length - 1]["x"] - GRLine[0]["x"]) / 1e3 / 60 / 60);
       console.log(GR);
