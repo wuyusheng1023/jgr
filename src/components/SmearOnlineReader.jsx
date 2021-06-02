@@ -1,10 +1,9 @@
 import { useState, useEffect } from 'react';
 
-import Form from 'antd/lib/form'
-import Button from 'antd/lib/button'
-import Radio from 'antd/lib/radio'
-import Select from 'antd/lib/select'
-import DatePicker from 'antd/lib/date-picker'
+import Form from 'antd/lib/form';
+import Button from 'antd/lib/button';
+import Select from 'antd/lib/select';
+import DatePicker from 'antd/lib/date-picker';
 
 import constructQueryUrl from '../helpers/constructQueryUrl.js';
 import tidySmearOnline from '../helpers/tidySmearOnline';
@@ -82,25 +81,25 @@ export default function SmearCsvReader({ passData }) {
         onFinish={onFinish}
       >
         <Form.Item label="Station" name="station">
-          <Radio.Group>
-            <Radio.Button style={{ marginRight: 10, marginBottom: 10 }} value="VAR">SMEAR I Värriö forest</Radio.Button>
-            <Radio.Button style={{ marginRight: 10, marginBottom: 10 }} value="HYY">SMEAR II Hyytiälä forest</Radio.Button>
-            <Radio.Button style={{ marginRight: 10 }} value="KUM">SMEAR III Helsinki Kumpula</Radio.Button>
-          </Radio.Group>
+          <Select style={{ width: 220 }}>
+            <Select.Option value="VAR">SMEAR I Värriö forest</Select.Option>
+            <Select.Option value="HYY">SMEAR II Hyytiälä forest</Select.Option>
+            <Select.Option value="KUM">SMEAR III Helsinki Kumpula</Select.Option>
+          </Select>
         </Form.Item>
 
         <Form.Item label="Date" name="date">
           <DatePicker />
         </Form.Item>
 
-        <Form.Item label="Processing Level" name="quality">
+        <Form.Item label="Process Level" name="quality" style={{ display: 'none' }}>
           <Select style={{ width: 120 }}>
             <Select.Option value="ANY">ANY</Select.Option>
             <Select.Option value="CHECKED">CHECKED</Select.Option>
           </Select>
         </Form.Item>
 
-        <Form.Item label="Averaging" name="interval">
+        <Form.Item label="Averaging" name="interval" style={{ display: 'none' }}>
           <Select style={{ width: 120 }}>
             <Select.Option value="1 min">1 min</Select.Option>
             <Select.Option value="30 min">30 min</Select.Option>
@@ -108,7 +107,7 @@ export default function SmearCsvReader({ passData }) {
           </Select>
         </Form.Item>
 
-        <Form.Item label="Averaging Type" name="aggregation">
+        <Form.Item label="Average Type" name="aggregation" style={{ display: 'none' }}>
           <Select style={{ width: 120 }}>
             <Select.Option value="NONE">NONE</Select.Option>
             <Select.Option value="ARITHMETIC">ARITHMETIC</Select.Option>
@@ -128,4 +127,3 @@ export default function SmearCsvReader({ passData }) {
     </>
   );
 };
-

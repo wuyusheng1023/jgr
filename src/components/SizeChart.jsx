@@ -15,7 +15,7 @@ const SizeChart = ({ data }) => {
 
   useEffect(() => {
     const dpLowerLimit = 3e-9;
-    const validAreaRatio = [0.005, 0.2];
+    const validAreaRatio = [0.005, 0.15];
 
     // plot dimemsions
     const width = 640;
