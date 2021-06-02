@@ -142,7 +142,7 @@ const SizeChart = ({ data }) => {
     let sc = null;
     let nBlock = 0;
     [sr, sc] = getROIIndex(fillArr);
-    while (sr) {
+    while (sr !== null) {
       nBlock += 1;
       fillArr = floodFill(fillArr, sr, sc, nBlock);
       [sr, sc] = getROIIndex(fillArr);
