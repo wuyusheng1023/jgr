@@ -5,6 +5,7 @@ import * as colormap from 'colormap';
 
 import lodashClonedeep from 'lodash/cloneDeep';
 
+import range from '../helpers/range.js';
 import floodFill from '../helpers/floodFill.js';
 import gaussFit from '../helpers/gaussFit.js';
 
@@ -80,19 +81,6 @@ const SizeChart = ({ data }) => {
     // select raw data or a smooth data to plot the contour
     const plotData = lodashClonedeep(rawArr).reverse();
     let z = [].concat(...plotData).map( x => x >= 10 ? Math.log10(x) : 1.000000001);
-
-    // function to get a range array
-    const range = (start, end, step = 1) => {
-      let output = [];
-      if (typeof end === 'undefined') {
-        end = start;
-        start = 0;
-      }
-      for (let i = start; i < end; i += step) {
-        output.push(i);
-      }
-      return output;
-    };
 
     // calculate dNdlogDp contour color scale
     const logDpRange = range(1, 4.0001, 0.05)
@@ -187,15 +175,31 @@ const SizeChart = ({ data }) => {
         const ROISizeRowArr = [];
         for (let i = 0; i < rawArr.length; i++) {
           const ROISizeRow = rawArr[i].filter((_, j) => ROI2[i][j] === 1);
-          const timeRow = x.filter((_, j) => ROI2[i][j] === 1);
+          const timeRow = range(0, rawArr[i].length).filter((_, j) => ROI2[i][j] === 1);
           if (ROISizeRow.length > 0) {
             ROISizeRowArr.push({
               size: y[i],
               time: timeRow,
-              bins: ROISizeRow,
+              dndlogdp: ROISizeRow,
             });
           };
         };
+
+        // Fit max concentration      
+        if (ROISizeRowArr.length > 0) {
+          for (let i = 0; i < ROISizeRowArr.length; i++) {
+            const xOriginal = ROISizeRowArr[i]['time'];
+            const yOriginal = ROISizeRowArr[i]['dndlogdp'];
+            const yFit = gaussFit(xOriginal, yOriginal);
+            const yFitMax = Math.max(...yFit);
+            const index = xOriginal[yFit.indexOf(yFitMax)];
+            ROISizeRowArr[i]['time'] = x[index];
+          };
+        };
+        const fitTimeArr = ROISizeRowArr.map(d => d['time']);
+        const fitSizeArr = ROISizeRowArr.map(d => d['size']);
+        console.log(fitTimeArr);
+        console.log(fitSizeArr);
       };
     };
 

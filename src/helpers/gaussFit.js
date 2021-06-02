@@ -8,14 +8,16 @@ const gaussFunc = (x, xMaxi, yMaxi, s) => {
 
 // Gaussian Fitting
 export default function gaussFit(xOriginal, yOriginal) {
-  const average = math.mean(yOriginal);
+  // const average = math.mean(yOriginal);
 
   const x = [];
   const y = [];
 
   // only use half large valuse to fit
+  // or use >0 to fit
   for (let i = 0; i < yOriginal.length; i++) {
-    if (yOriginal[i] > average) {
+    // if (yOriginal[i] > average)
+    if (yOriginal[i] > 0) {
       x.push(xOriginal[i]);
       y.push(yOriginal[i]);
     };
