@@ -272,10 +272,13 @@ const SizeChart = ({ data }) => {
   const ref = useRef();
 
   return (
-    <svg
-      // style={{backgroundColor: "LightGrey"}}
-      ref={ref}
-    />
+    <>
+      <svg
+        // style={{backgroundColor: "LightGrey"}}
+        ref={ref}
+      />
+      <h3>{`Growth Rate: ${parseFloat(GR).toFixed(2)}`}</h3>
+    </>
   );
 };
 
