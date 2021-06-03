@@ -34,10 +34,6 @@ function App() {
     };
   };
 
-  const passResult = result => {
-    console.log("result", result);
-  };
-
   return (
     <>
       <Row style={{ paddingTop: 20}}>
@@ -73,7 +69,7 @@ function App() {
           }
           {
             data ? 
-              <SizeChart data={data} passResult={passResult}/> : 
+              <SizeChart data={data} /> : 
               null 
           }
         </Col>

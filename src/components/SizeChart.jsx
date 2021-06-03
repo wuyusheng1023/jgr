@@ -11,7 +11,7 @@ import gaussFit from '../helpers/gaussFit.js';
 import growthRateFit from '../helpers/growthRateFit.js';
 
 
-const SizeChart = ({ data, passResult }) => {
+const SizeChart = ({ data }) => {
 
   const dpLowerLimit = 3e-9;
   const validAreaRatio = [0.005, 0.15];
@@ -208,9 +208,7 @@ const SizeChart = ({ data, passResult }) => {
     GR = (GRLine[GRLine.length - 1]["y"] - GRLine[0]["y"]) * 1e9 / ((GRLine[GRLine.length - 1]["x"] - GRLine[0]["x"]) / 1e3 / 60 / 60);
   };
 
-  passResult({
-    GR: GR,
-  });
+  console.log(GR);
 
   useEffect(() => {
     
