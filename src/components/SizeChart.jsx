@@ -205,7 +205,11 @@ const SizeChart = ({ data }) => {
   let GR = null;
   if (fitTimeSize && fitTimeSize.length > 0) {
     GRLine = growthRateFit(fitTimeSize);
-    GR = (GRLine[GRLine.length - 1]["y"] - GRLine[0]["y"]) * 1e9 / ((GRLine[GRLine.length - 1]["x"] - GRLine[0]["x"]) / 1e3 / 60 / 60);
+    if (GRLine !== null) {
+      GR = (GRLine[GRLine.length - 1]["y"] - GRLine[0]["y"]) * 1e9 / ((GRLine[GRLine.length - 1]["x"] - GRLine[0]["x"]) / 1e3 / 60 / 60);
+    } else {
+      GR = null;
+    };
   };
 
   console.log(GR);
